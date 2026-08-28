@@ -1,0 +1,182 @@
+/* ================================================================
+   ADMIN-LAYOUT.CSS — El Cielo
+   Layout base para todas las vistas del administrador
+   ================================================================ */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --accent:          #079b89;
+    --accent-dark:     #06766a;
+    --bg-page:         #f4f7fa;
+    --text-primary:    #101a33;
+    --text-secondary:  #64748b;
+    --text-muted:      #94a3b8;
+    --bg-white:        #ffffff;
+    --shadow-sm:       0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md:       0 4px 16px rgba(0,0,0,0.10);
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+header {
+    background: linear-gradient(135deg, #001f3f 0%, #003d5c 100%);
+    color: white;
+    padding: 20px 32px;
+    box-shadow: var(--shadow-md);
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* ── MAIN ── */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 32px;
+}
+
+.container { width: 100%; }
+
+/* ── LINKS ── */
+a {
+    text-decoration: none;
+    color: var(--accent);
+    transition: color 0.2s;
+}
+
+a:hover { color: var(--accent-dark); }
+
+button { font-family: 'Inter', system-ui, sans-serif; }
+
+/* ── DASHBOARD HEADER ── */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    gap: 20px;
+}
+
+.dashboard-welcome h1 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+}
+
+.dashboard-welcome p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.dashboard-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ── BOTONES ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.22s;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.btn-logout {
+    padding: 11px 24px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.22s, transform 0.18s;
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+}
+
+.btn-logout:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+    main { padding: 24px 16px; }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-welcome h1 { font-size: 24px; }
+
+    .dashboard-actions { width: 100%; }
+
+    .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

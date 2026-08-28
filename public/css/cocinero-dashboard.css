@@ -1,0 +1,170 @@
+/* ================================================================
+   COCINERO-DASHBOARD.CSS — El Cielo
+   ================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+/* ── HEADER ── */
+.header {
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+    padding: 18px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.brand p {
+    margin: 4px 0 0;
+    color: #777;
+}
+
+.user { font-weight: bold; }
+
+/* ── CONTENIDO ── */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.top h2 { margin: 0; }
+
+.refresh {
+    color: #777;
+    font-size: 14px;
+}
+
+/* ── ESTADÍSTICAS ── */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 22px;
+    border: 1px solid #ddd;
+}
+
+.card span {
+    display: block;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.card strong { font-size: 30px; }
+
+/* ── PEDIDOS ── */
+.orders {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.orders-header {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.filter {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    background: #fff;
+}
+
+.filter.active {
+    font-weight: bold;
+    background: #eee;
+}
+
+/* ── FILA DE PEDIDO ── */
+.order-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 15px;
+}
+
+.order-item p { margin: 6px 0; }
+
+.order-item a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-listo {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-listo:hover { background: #15803d; }
+
+/* ── VACÍO ── */
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #777;
+}
+
+/* ── LOGOUT ── */
+.logout { margin-top: 30px; }
+
+.logout button {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 500px) {
+    .cards { grid-template-columns: 1fr; }
+    .header { padding: 14px 20px; }
+}
