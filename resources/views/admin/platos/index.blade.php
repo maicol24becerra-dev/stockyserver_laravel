@@ -1,38 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platos — El Cielo</title>
-    <link rel="stylesheet" href="{{ asset('css/admin-platos.css') }}">
-</head>
-<body>
+@extends('layouts.admin')
 
-<header>
-    <h1>El Cielo</h1>
-</header>
+@section('title', 'Panel de Administrador - El Cielo')
+@section('page_title', 'Gestión de Platos')
 
-<main>
+@section('content')
 
-    <div class="top-bar">
-        <h2>Gestión de Platos</h2>
-        <div>
-            <a href="{{ route('admin.dashboard') }}">← Volver al panel</a>
-            &nbsp;|&nbsp;
-            <a href="{{ route('admin.platos.create') }}">+ Nuevo plato</a>
-        </div>
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">Catálogo de Platos</h3>
+        <a href="{{ route('admin.platos.create') }}" class="btn-aplicar" style="text-decoration: none;">
+            + Nuevo Plato
+        </a>
     </div>
 
-    @if(session('success'))
-        <div class="alert">{{ session('success') }}</div>
-    @endif
-
-    <div class="card">
-
-        @if($platos->isEmpty())
-            <p>No hay platos registrados.</p>
-        @else
-            <table>
+    @if($platos->isEmpty())
+        <p style="text-align: center; color: #94a3b8; padding: 40px 0; font-weight: 600;">No hay platos registrados.</p>
+    @else
+        <div class="table-responsive">
+            <table class="admin-table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -40,61 +25,46 @@
                         <th>Precio</th>
                         <th>Categoría</th>
                         <th>Disponibilidad</th>
-                        <th>Acciones</th>
+                        <th style="text-align: right;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($platos as $plato)
                         <tr>
-                            <td>{{ $plato->id_plato }}</td>
-                            <td>{{ $plato->nombre }}</td>
-                            <td class="precio">${{ number_format($plato->precio, 0, ',', '.') }}</td>
-                            <td>{{ $plato->categoria ?? 'Sin categoría' }}</td>
+                            <td><strong>#{{ $plato->id_plato }}</strong></td>
+                            <td><strong>{{ $plato->nombre }}</strong></td>
+                            <td style="font-weight: 800; color: #009640;">${{ number_format($plato->precio, 0, ',', '.') }}</td>
                             <td>
-                                @if($plato->disponibilidad > 0)
-                                    <span class="disponible">Disponible ({{ $plato->disponibilidad }})</span>
-                                @else
-                                    <span class="no-disponible">No disponible</span>
-                                @endif
+                                <span class="badge" style="background-color: #e0f2fe; color: #0369a1;">
+                                    {{ $plato->categoria ?? 'Sin categoría' }}
+                                </span>
                             </td>
                             <td>
-                                <div class="actions">
-                                    <a href="{{ route('admin.platos.show', $plato) }}">Ver</a>
-                                    <a href="{{ route('admin.platos.edit', $plato) }}">Editar</a>
-
-                                    <form method="POST"
-                                          action="{{ route('admin.platos.disponibilidad', $plato) }}">
-                                        @csrf
-                                        <input type="hidden" name="disponibilidad"
-                                               value="{{ $plato->disponibilidad > 0 ? 0 : 1 }}">
-                                        <button type="submit"
-                                                class="{{ $plato->disponibilidad > 0 ? 'btn-secondary' : 'btn-success' }}">
-                                            {{ $plato->disponibilidad > 0 ? 'Desactivar' : 'Activar' }}
-                                        </button>
-                                    </form>
-
-                                    <form method="POST"
-                                          action="{{ route('admin.platos.destroy', $plato) }}"
-                                          onsubmit="return confirm('¿Seguro que deseas eliminar este plato?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-danger">Eliminar</button>
-                                    </form>
-                                </div>
+                                @if($plato->disponibilidad > 0)
+                                    <span class="badge badge-success">Disponible</span>
+                                @else
+                                    <span class="badge badge-danger">No disponible</span>
+                                @endif
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="{{ route('admin.platos.show', $plato) }}" style="color: #0d9488; font-weight: 700; text-decoration: none; margin-right: 10px;">Ver</a>
+                                <a href="{{ route('admin.platos.edit', $plato) }}" style="color: #2563eb; font-weight: 700; text-decoration: none; margin-right: 10px;">Editar</a>
+                                <form method="POST" action="{{ route('admin.platos.destroy', $plato) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este plato?');" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer; font-family: inherit;">Eliminar</button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
 
-            <div class="pagination-wrap">
-                {{ $platos->links() }}
-            </div>
-        @endif
+        <div style="margin-top: 20px;">
+            {{ $platos->links() }}
+        </div>
+    @endif
+</div>
 
-    </div>
-
-</main>
-
-</body>
-</html>
+@endsection

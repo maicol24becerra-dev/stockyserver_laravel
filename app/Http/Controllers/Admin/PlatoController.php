@@ -25,7 +25,11 @@ class PlatoController extends Controller
      */
     public function create(): View
     {
-        return view('admin.platos.create');
+        $categorias = \App\Models\Categoria::where('activo', true)
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.platos.create', compact('categorias'));
     }
 
     /**
@@ -39,13 +43,34 @@ class PlatoController extends Controller
             'descripcion' => ['nullable', 'string'],
             'disponibilidad' => ['required', 'integer', 'min:0'],
             'categoria' => ['nullable', 'string', 'max:255'],
+            'id_categoria' => ['nullable', 'exists:categoria,id_categoria'],
             'imagen' => ['nullable', 'string', 'max:255'],
+            'calorias' => ['nullable', 'integer', 'min:0'],
+            'proteinas' => ['nullable', 'numeric', 'min:0'],
+            'carbohidratos' => ['nullable', 'numeric', 'min:0'],
+            'grasas' => ['nullable', 'numeric', 'min:0'],
+            'alergenos' => ['nullable', 'string'],
+            'vegetariano' => ['boolean'],
+            'vegano' => ['boolean'],
+            'sin_gluten' => ['boolean'],
+            'ingredientes_principales' => ['nullable', 'string'],
+            'tiempo_preparacion' => ['nullable', 'integer', 'min:0'],
+            'nivel_picante' => ['nullable', 'in:ninguno,bajo,medio,alto'],
         ]);
+
+        if ($request->hasFile('imagen_file')) {
+            $path = $request->file('imagen_file')->store('platos', 'public');
+            $validated['imagen'] = $path;
+        }
+
+        if (!isset($validated['disponibilidad'])) {
+            $validated['disponibilidad'] = 1;
+        }
 
         Plato::create($validated);
 
         return redirect()
-            ->route('admin.platos.index')
+            ->back()
             ->with('success', 'Plato creado correctamente.');
     }
 
@@ -62,7 +87,11 @@ class PlatoController extends Controller
      */
     public function edit(Plato $plato): View
     {
-        return view('admin.platos.edit', compact('plato'));
+        $categorias = \App\Models\Categoria::where('activo', true)
+            ->orderBy('nombre')
+            ->get();
+
+        return view('admin.platos.edit', compact('plato', 'categorias'));
     }
 
     /**
@@ -76,7 +105,19 @@ class PlatoController extends Controller
             'descripcion' => ['nullable', 'string'],
             'disponibilidad' => ['required', 'integer', 'min:0'],
             'categoria' => ['nullable', 'string', 'max:255'],
+            'id_categoria' => ['nullable', 'exists:categoria,id_categoria'],
             'imagen' => ['nullable', 'string', 'max:255'],
+            'calorias' => ['nullable', 'integer', 'min:0'],
+            'proteinas' => ['nullable', 'numeric', 'min:0'],
+            'carbohidratos' => ['nullable', 'numeric', 'min:0'],
+            'grasas' => ['nullable', 'numeric', 'min:0'],
+            'alergenos' => ['nullable', 'string'],
+            'vegetariano' => ['boolean'],
+            'vegano' => ['boolean'],
+            'sin_gluten' => ['boolean'],
+            'ingredientes_principales' => ['nullable', 'string'],
+            'tiempo_preparacion' => ['nullable', 'integer', 'min:0'],
+            'nivel_picante' => ['nullable', 'in:ninguno,bajo,medio,alto'],
         ]);
 
         $plato->update($validated);

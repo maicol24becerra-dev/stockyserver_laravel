@@ -15,6 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
 
     $middleware->alias([
         'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
+        'destroy-on-unauthorized' => \App\Http\Middleware\DestroySessionOnUnauthorized::class,
+        'no-cache' => \App\Http\Middleware\NoCacheHeaders::class,
+    ]);
+
+    // Agregar middleware globalmente para todas las rutas autenticadas
+    $middleware->web(append: [
+        \App\Http\Middleware\NoCacheHeaders::class,
     ]);
 
 })

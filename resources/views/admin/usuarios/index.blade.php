@@ -1,147 +1,72 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.admin')
 
-    <title>Gestión de Usuarios - StockYServe</title>
-</head>
+@section('title', 'Panel de Administrador - El Cielo')
+@section('page_title', 'Gestión de Usuarios')
 
-<body>
+@section('content')
 
-    <h1>StockYServe</h1>
-
-    <h2>Gestión de Usuarios</h2>
-
-    @if (session('success'))
-        <p>
-            <strong>{{ session('success') }}</strong>
-        </p>
-    @endif
-
-    @if (session('error'))
-        <p>
-            <strong>{{ session('error') }}</strong>
-        </p>
-    @endif
-
-    <p>
-        <a href="{{ route('admin.dashboard') }}">
-            ← Volver al panel
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">Listado de Usuarios</h3>
+        <a href="{{ route('admin.usuarios.create') }}" class="btn-aplicar" style="text-decoration: none;">
+            + Nuevo Usuario
         </a>
-    </p>
-
-    <p>
-        <a href="{{ route('admin.usuarios.create') }}">
-            + Nuevo usuario
-        </a>
-    </p>
+    </div>
 
     @if ($usuarios->count() > 0)
-
-        <table border="1" cellpadding="8" cellspacing="0">
-
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @foreach ($usuarios as $usuario)
-
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
                     <tr>
-
-                        <td>
-                            {{ $usuario->id_usuario }}
-                        </td>
-
-                        <td>
-                            {{ $usuario->nombre }}
-                        </td>
-
-                        <td>
-                            {{ $usuario->correo }}
-                        </td>
-
-                        <td>
-                            {{ $usuario->telefono ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $usuario->role->nombre ?? 'Sin rol' }}
-                        </td>
-
-                        <td>
-                            {{ $usuario->estado }}
-                        </td>
-
-                        <td>
-
-                            <a href="{{ route('admin.usuarios.show', $usuario) }}">
-                                Ver
-                            </a>
-
-                            |
-
-                            <a href="{{ route('admin.usuarios.edit', $usuario) }}">
-                                Editar
-                            </a>
-
-                            |
-
-                            @if (auth()->id() !== $usuario->id_usuario)
-
-                                <form
-                                    action="{{ route('admin.usuarios.destroy', $usuario) }}"
-                                    method="POST"
-                                    style="display:inline;"
-                                    onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');"
-                                >
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button type="submit">
-                                        Eliminar
-                                    </button>
-
-                                </form>
-
-                            @else
-
-                                <span>
-                                    Usuario actual
-                                </span>
-
-                            @endif
-
-                        </td>
-
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach ($usuarios as $usuario)
+                        <tr>
+                            <td><strong>#{{ $usuario->id_usuario }}</strong></td>
+                            <td><strong>{{ $usuario->nombre }}</strong></td>
+                            <td>{{ $usuario->correo }}</td>
+                            <td>{{ $usuario->telefono ?? '-' }}</td>
+                            <td>
+                                <span class="badge badge-success">{{ $usuario->role->nombre ?? 'Sin rol' }}</span>
+                            </td>
+                            <td>
+                                @if(strtolower($usuario->estado) === 'activo')
+                                    <span class="badge badge-success">Activo</span>
+                                @else
+                                    <span class="badge badge-danger">{{ ucfirst($usuario->estado) }}</span>
+                                @endif
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="{{ route('admin.usuarios.show', $usuario) }}" style="color: #0d9488; font-weight: 700; text-decoration: none; margin-right: 10px;">Ver</a>
+                                <a href="{{ route('admin.usuarios.edit', $usuario) }}" style="color: #2563eb; font-weight: 700; text-decoration: none; margin-right: 10px;">Editar</a>
+                                @if (auth()->id() !== $usuario->id_usuario)
+                                    <form action="{{ route('admin.usuarios.destroy', $usuario) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" style="background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer; font-family: inherit;">Eliminar</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-                @endforeach
-
-            </tbody>
-
-        </table>
-
-        <br>
-
-        {{ $usuarios->links() }}
-
+        <div style="margin-top: 20px;">
+            {{ $usuarios->links() }}
+        </div>
     @else
-
-        <p>No hay usuarios registrados.</p>
-
+        <p style="text-align: center; color: #94a3b8; padding: 40px 0;">No hay usuarios registrados.</p>
     @endif
+</div>
 
-</body>
-</html>
+@endsection

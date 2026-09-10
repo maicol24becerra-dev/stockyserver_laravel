@@ -73,7 +73,10 @@ class AuthController extends Controller
 
         request()->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')
+            ->withHeader('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+            ->withHeader('Pragma', 'no-cache')
+            ->withHeader('Expires', 'Sun, 02 Jan 1990 00:00:00 GMT');
     }
 
     /**

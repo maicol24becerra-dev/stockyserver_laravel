@@ -19,6 +19,7 @@ class Pago extends Model
         'monto_pagado',
         'metodo_pago',
         'fecha_pago',
+        'observaciones',
         'id_pedido',
     ];
 

@@ -33,7 +33,16 @@ class CocineroController extends Controller
             'pendiente',
             'en preparación',
         ])
-        ->orderByDesc('fecha');
+        ->orderByRaw("
+            CASE prioridad 
+                WHEN 'urgente' THEN 1 
+                WHEN 'alta' THEN 2 
+                WHEN 'normal' THEN 3 
+                WHEN 'baja' THEN 4 
+                ELSE 5 
+            END
+        ")
+        ->orderBy('fecha', 'asc');
 
 
         /*
@@ -88,14 +97,14 @@ class CocineroController extends Controller
         | Urgentes
         |--------------------------------------------------------------------------
         |
-        | Por ahora no tenemos una columna de prioridad/urgencia
-        | en la tabla pedido.
-        |
-        | Por eso se mantiene en 0 hasta implementar esa función.
+        | Pedidos con prioridad alta o urgente.
         |
         */
 
-        $urgentes = 0;
+        $urgentes = Pedido::whereIn('estado', [
+            'pendiente', 
+            'en preparación'
+        ])->whereIn('prioridad', ['alta', 'urgente'])->count();
 
 
         /*
@@ -115,6 +124,47 @@ class CocineroController extends Controller
 
         return view(
             'cocinero.dashboard',
+            compact(
+                'pedidos',
+                'pendientes',
+                'enPreparacion',
+                'urgentes',
+                'conHoraEntrega'
+            )
+        );
+    }
+
+    /**
+     * Historial de pedidos completados/finalizados de cocina.
+     */
+    public function historial(Request $request): View
+    {
+        $query = Pedido::with([
+            'cliente.usuario',
+            'usuario',
+            'items.plato',
+        ])
+        ->whereNotIn('estado', [
+            'pendiente',
+            'en preparación',
+        ])
+        ->orderBy('fecha', 'desc');
+
+        if ($request->filled('estado')) {
+            $estado = $request->input('estado');
+            $query->where('estado', $estado);
+        }
+
+        $pedidos = $query->get();
+
+        $pendientes = Pedido::where('estado', 'pendiente')->count();
+        $enPreparacion = Pedido::where('estado', 'en preparación')->count();
+        $urgentes = Pedido::whereIn('estado', ['pendiente', 'en preparación'])
+            ->whereIn('prioridad', ['alta', 'urgente'])->count();
+        $conHoraEntrega = 0;
+
+        return view(
+            'cocinero.historial',
             compact(
                 'pedidos',
                 'pendientes',

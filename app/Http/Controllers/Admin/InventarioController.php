@@ -15,19 +15,22 @@ class InventarioController extends Controller
     /**
      * Mostrar el inventario.
      */
-   public function index(): View
-{
-    $materias = MateriaPrima::orderBy('nombre')->get();
+    public function index(): View
+    {
+        $materias = MateriaPrima::orderBy('nombre')->get();
 
-    $platos = Plato::with('recetas.materiaPrima')
-        ->orderBy('nombre')
-        ->get();
+        $platos = Plato::with('recetas.materiaPrima')
+            ->orderBy('nombre')
+            ->get();
 
-    return view('admin.inventario.index', compact(
-        'materias',
-        'platos'
-    ));
-}
+        $categorias = \App\Models\Categoria::orderBy('nombre')->get();
+
+        return view('admin.inventario.index', compact(
+            'materias',
+            'platos',
+            'categorias'
+        ));
+    }
 
     /**
      * Crear una materia prima.

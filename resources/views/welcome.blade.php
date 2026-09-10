@@ -6,12 +6,12 @@
   <meta name="description" content="El Cielo — Plataforma digital del Centro Vacacional y Recreacional.">
   <title>El Cielo — Sistema de Gestión Integral</title>
 
-  {{-- Fuentes: Outfit para body, Playfair Display para títulos --}}
+  {{-- Fuentes Google: Outfit + Playfair Display --}}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/welcome/welcome.css') }}">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
 ════════════════════════════════════════════════════════════ --}}
 <nav class="navbar" id="navbar">
   <a href="{{ url('/') }}" class="nav-brand">
-    <img src="{{ asset('images/logo.png') }}" alt="El Cielo">
+    <img src="{{ asset('elcielo/assets/img/hero.png') }}?v={{ time() }}" alt="El Cielo">
     <span>El Cielo</span>
   </a>
 
@@ -34,34 +34,34 @@
   <div class="nav-actions">
     @guest
       <a href="{{ route('login') }}" class="btn-nav-login">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
           <polyline points="10 17 15 12 10 7"/>
           <line x1="15" y1="12" x2="3" y2="12"/>
         </svg>
-        Ingresar al sistema
+        <span>Ingresar al sistema</span>
       </a>
       <a href="{{ route('register') }}" class="btn-nav-register">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
           <line x1="19" y1="8" x2="19" y2="14"/>
           <line x1="22" y1="11" x2="16" y2="11"/>
         </svg>
-        Crear cuenta
+        <span>Crear cuenta</span>
       </a>
     @endguest
 
     @auth
       @php $rol = auth()->user()->role?->nombre; @endphp
       @if($rol === 'Administrador')
-        <a href="{{ route('admin.dashboard') }}" class="btn-nav-account">Mi cuenta</a>
+        <a href="{{ route('admin.dashboard') }}" class="btn-nav-account">Mi panel</a>
       @elseif($rol === 'Mesero')
-        <a href="{{ route('mesero.dashboard') }}" class="btn-nav-account">Mi cuenta</a>
+        <a href="{{ route('mesero.dashboard') }}" class="btn-nav-account">Mi panel</a>
       @elseif($rol === 'Cocinero')
-        <a href="{{ route('cocinero.dashboard') }}" class="btn-nav-account">Mi cuenta</a>
+        <a href="{{ route('cocinero.dashboard') }}" class="btn-nav-account">Mi panel</a>
       @elseif($rol === 'Cliente')
-        <a href="{{ route('cliente.dashboard') }}" class="btn-nav-account">Mi cuenta</a>
+        <a href="{{ route('cliente.dashboard') }}" class="btn-nav-account">Mi panel</a>
       @endif
       <form method="POST" action="{{ route('logout') }}" style="display:inline;">
         @csrf
@@ -83,15 +83,15 @@
   <div class="hero-content">
 
     <div class="hero-badge">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/>
       </svg>
-      Sistema de Gestión Integral
+      <span>SISTEMA DE GESTIÓN INTEGRAL</span>
     </div>
 
     <h1 class="hero-title">
       Bienvenido a<br>
-      <span>El Cielo</span>
+      <span class="brand-highlight">El Cielo</span>
     </h1>
 
     <p class="hero-subtitle">
@@ -99,8 +99,8 @@
       Gestiona pedidos, inventario, reportes y más desde un solo lugar.
     </p>
 
-    <div class="hero-actions">
-      @auth
+    @auth
+      <div class="hero-actions">
         @php $rol = auth()->user()->role?->nombre; @endphp
         @if($rol === 'Administrador')
           <a href="{{ route('admin.dashboard') }}" class="btn-primary">Ir al Dashboard</a>
@@ -111,14 +111,14 @@
         @elseif($rol === 'Cliente')
           <a href="{{ route('cliente.dashboard') }}" class="btn-primary">Ir a mi cuenta</a>
         @endif
-      @endauth
-    </div>
+      </div>
+    @endauth
 
   </div>
 
   <a href="#stats" class="hero-scroll">
-    Descubrir
-    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <span>DESCUBRIR</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="6 9 12 15 18 9"/>
     </svg>
   </a>
@@ -266,7 +266,7 @@
 <footer class="footer" id="contacto">
 
   <a href="{{ url('/') }}" class="footer-brand">
-    <img src="{{ asset('images/logo.png') }}" alt="El Cielo">
+    <img src="{{ asset('elcielo/assets/img/hero.png') }}?v={{ time() }}" alt="El Cielo">
     <span>El Cielo</span>
   </a>
 
@@ -301,3 +301,4 @@
 
 </body>
 </html>
+

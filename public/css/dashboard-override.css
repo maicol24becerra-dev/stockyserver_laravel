@@ -1,0 +1,174 @@
+/* ============================================================================
+   DASHBOARD ADMIN - Complemento de estilos
+   ============================================================================ */
+
+/* Garantizar que los contenedores padre funcionen bien */
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1200px;
+}
+
+/* Mejorar cards de estadísticas principales */
+[style*="grid-template-columns: repeat(auto-fit"] {
+    display: grid !important;
+}
+
+/* Tarjetas de números (Total pedidos, Pendientes, etc) */
+div[style*="background: white"][style*="border: 1px solid #ddd"][style*="border-radius: 10px"][style*="padding: 20px"] {
+    transition: all 0.3s ease !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+div[style*="background: white"][style*="border: 1px solid #ddd"][style*="border-radius: 10px"][style*="padding: 20px"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Mejorar títulos de tarjetas */
+div[style*="background: white"] p[style*="color: #666"] {
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+}
+
+/* Números grandes de estadísticas */
+div[style*="background: white"] h2[style*="font-size: 32px"],
+div[style*="background: white"] h2[style*="font-size: 30px"] {
+    color: #1e293b !important;
+    font-weight: 700 !important;
+}
+
+/* Sección de accesos rápidos */
+div[style*="background: white"][style*="border: 1px solid #ddd"][style*="border-radius: 10px"][style*="padding: 25px"] {
+    transition: all 0.3s ease !important;
+}
+
+/* Botones inline */
+button[style*="background:"],
+button[style*="background :"] {
+    transition: all 0.2s ease !important;
+    font-weight: 600 !important;
+}
+
+button[style*="background: #007bff"]:hover,
+button[style*="background:#007bff"]:hover {
+    opacity: 0.9 !important;
+}
+
+button[style*="background: #28a745"]:hover,
+button[style*="background:#28a745"]:hover {
+    opacity: 0.9 !important;
+}
+
+button[style*="background: #6c757d"]:hover,
+button[style*="background:#6c757d"]:hover {
+    opacity: 0.9 !important;
+}
+
+button[style*="background: #ffc107"]:hover,
+button[style*="background:#ffc107"]:hover {
+    opacity: 0.9 !important;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table thead tr {
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+table thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+}
+
+table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* Enlaces en tablas */
+a[style*="color: #007bff"] {
+    color: #2563eb !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+a[style*="color: #007bff"]:hover {
+    color: #1d4ed8 !important;
+    text-decoration: underline;
+}
+
+/* Alertas */
+div[style*="background: #d1e7dd"],
+div[style*="background: #cce5ff"],
+div[style*="background: #f8d7da"] {
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Encabezados de secciones */
+h1, h2, h3, h4, h5, h6 {
+    color: #0f172a !important;
+}
+
+/* Párrafos */
+p {
+    color: #475569 !important;
+}
+
+/* Links en la página */
+a {
+    color: #2563eb !important;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+a:hover {
+    color: #1d4ed8 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    div[style*="display: grid"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .container {
+        padding: 0 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    div[style*="background: white"][style*="border: 1px solid #ddd"] {
+        padding: 12px !important;
+    }
+    
+    table {
+        font-size: 0.75rem;
+    }
+    
+    table thead th,
+    table tbody td {
+        padding: 8px !important;
+    }
+}

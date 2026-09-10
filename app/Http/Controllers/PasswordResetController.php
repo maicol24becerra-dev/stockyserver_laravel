@@ -69,7 +69,7 @@ class PasswordResetController extends Controller
 
             return back()
                 ->withErrors([
-                    'correo' => 'No existe una cuenta registrada con ese correo.',
+                    'correo' => 'Ese correo no está registrado.',
                 ])
                 ->withInput();
         }
@@ -85,7 +85,7 @@ class PasswordResetController extends Controller
 
             return back()
                 ->withErrors([
-                    'correo' => 'La recuperación de contraseña está disponible únicamente para cuentas de clientes.',
+                    'correo' => 'Este correo pertenece al personal de trabajo. Contacte a la administración para restablecer su contraseña.',
                 ])
                 ->withInput();
         }

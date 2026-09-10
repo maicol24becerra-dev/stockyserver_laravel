@@ -282,6 +282,31 @@ class UserController extends Controller
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | CRÍTICO: Validar pedidos activos antes de eliminar (HU-02C)
+        |--------------------------------------------------------------------------
+        | Un usuario NO puede ser eliminado si tiene pedidos en estados:
+        | - pendiente
+        | - en preparación
+        | - listo
+        */
+
+        $pedidosActivos = \App\Models\Pedido::where('id_usuario', $usuario->id_usuario)
+            ->whereNotIn('estado', ['entregado', 'cancelado'])
+            ->count();
+
+        if ($pedidosActivos > 0) {
+            return back()->withErrors([
+                'usuario' => sprintf(
+                    'No se puede eliminar a %s porque tiene %d pedido(s) activo(s). Completa o cancela los pedidos primero.',
+                    $usuario->nombre,
+                    $pedidosActivos
+                ),
+            ]);
+        }
+
+
         $usuario->delete();
 
 

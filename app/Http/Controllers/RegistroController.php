@@ -45,8 +45,7 @@ class RegistroController extends Controller
             'contrasena' => [
                 'required',
                 'string',
-                'min:8',
-                'confirmed',
+                'min:6',
             ],
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
@@ -58,8 +57,7 @@ class RegistroController extends Controller
             'telefono.max' => 'El teléfono no puede superar los 20 caracteres.',
 
             'contrasena.required' => 'La contraseña es obligatoria.',
-            'contrasena.min' => 'La contraseña debe tener mínimo 8 caracteres.',
-            'contrasena.confirmed' => 'Las contraseñas no coinciden.',
+            'contrasena.min' => 'La contraseña debe tener mínimo 6 caracteres.',
         ]);
 
         /*

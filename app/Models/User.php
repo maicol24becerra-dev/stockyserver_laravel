@@ -90,6 +90,14 @@ public function cliente(): HasOne
 {
     return $this->hasOne(Cliente::class, 'id_usuario', 'id_usuario');
 }
+
+/**
+ * Pedidos donde este usuario es el mesero/administrador
+ */
+public function pedidosComoUsuario()
+{
+    return $this->hasMany(Pedido::class, 'id_usuario', 'id_usuario');
+}
 /**
  * Obtener la contraseña utilizada por el sistema de autenticación.
  */

@@ -7,7 +7,8 @@
     <title>Iniciar sesión — El Cielo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/login/login.css') }}?v={{ time() }}">
 </head>
 
 <body>
@@ -21,12 +22,11 @@
         <div class="auth-panel__content">
 
             <div class="auth-panel__quote">
-                <p class="auth-panel__quote-text">
+                <h2 class="auth-panel__quote-text">
                     El Cielo
-                </p>
+                </h2>
                 <p class="auth-panel__quote-sub">
-                    Gastronomía de autor y experiencias inolvidables en un<br>
-                    entorno exclusivo.
+                    Gastronomía de autor y experiencias inolvidables en un entorno exclusivo.
                 </p>
             </div>
 
@@ -41,10 +41,8 @@
 
             {{-- Cabecera --}}
             <div class="auth-card__head">
-
                 <p class="auth-card__eyebrow">ACCESO AL SISTEMA</p>
                 <h1 class="auth-card__title">Iniciar sesión</h1>
-
             </div>
 
             {{-- Alerta de éxito --}}
@@ -115,11 +113,11 @@
                             aria-label="Mostrar contraseña"
                             onclick="togglePassword(this)"
                         >
-                            <svg id="eye-show" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg id="eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                 <circle cx="12" cy="12" r="3"/>
                             </svg>
-                            <svg id="eye-hide" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                            <svg id="eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
                                 <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
                                 <line x1="1" y1="1" x2="23" y2="23"/>
                             </svg>
@@ -139,11 +137,11 @@
 
                 {{-- Botón --}}
                 <button type="submit" class="auth-submit">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <span>Ingresar</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12"/>
                         <polyline points="12 5 19 12 12 19"/>
                     </svg>
-                    Ingresar
                 </button>
 
             </form>
@@ -151,7 +149,7 @@
             {{-- Links secundarios --}}
             <div class="auth-links">
                 <a href="{{ route('register') }}" class="auth-link">
-                    ¿No tienes una cuenta?&nbsp;<strong>Regístrate aquí</strong>
+                    ¿No tienes una cuenta?&nbsp;<span class="highlight">Regístrate aquí</span>
                 </a>
                 <a href="{{ route('home') }}" class="auth-link auth-link--muted">
                     ← Volver al inicio

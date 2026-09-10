@@ -18,6 +18,7 @@ class ItemPedido extends Model
     protected $fillable = [
         'cantidad',
         'precio_unitario',
+        'notas_especiales',
         'id_pedido',
         'id_plato',
     ];

@@ -144,7 +144,7 @@ Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
 
     /*
@@ -166,7 +166,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/mesero/dashboard', function () {
         $pedidos = Pedido::with(['cliente.usuario', 'usuario', 'items.plato', 'pago'])
-            ->orderByDesc('fecha')
+            ->orderByRaw("
+                CASE prioridad 
+                    WHEN 'urgente' THEN 1 
+                    WHEN 'alta' THEN 2 
+                    WHEN 'normal' THEN 3 
+                    WHEN 'baja' THEN 4 
+                    ELSE 5 
+                END
+            ")
+            ->orderBy('fecha', 'asc')
             ->get();
 
         return view('mesero.dashboard', [
@@ -183,13 +192,17 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Dashboard Cocinero
+    | Dashboard y Historial Cocinero
     |--------------------------------------------------------------------------
     */
 
     Route::get('/cocinero/dashboard', [CocineroController::class, 'dashboard'])
         ->middleware('role:Cocinero')
         ->name('cocinero.dashboard');
+
+    Route::get('/cocinero/historial', [CocineroController::class, 'historial'])
+        ->middleware('role:Cocinero')
+        ->name('cocinero.historial');
 
 
     /*
@@ -201,6 +214,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/cliente/dashboard', [ClienteController::class, 'dashboard'])
         ->middleware('role:Cliente')
         ->name('cliente.dashboard');
+
+
+    Route::get('/cliente/menu', [ClienteController::class, 'menu'])
+        ->middleware('role:Cliente')
+        ->name('cliente.menu');
+
+    Route::get('/cliente/pedidos', [ClienteController::class, 'pedidos'])
+        ->middleware('role:Cliente')
+        ->name('cliente.pedidos');
+
+    Route::get('/cliente/perfil', [ClienteController::class, 'perfil'])
+        ->middleware('role:Cliente')
+        ->name('cliente.perfil');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Repetir pedido anterior (HU-13)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/cliente/repetir-pedido/{pedido}', [ClienteController::class, 'repetirPedido'])
+        ->middleware('role:Cliente')
+        ->name('cliente.repetir-pedido');
 
 
     /*
@@ -330,6 +366,53 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Gestión de Categorías
+    |--------------------------------------------------------------------------
+    | Solo Administrador
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('/admin/categorias', \App\Http\Controllers\Admin\CategoriaController::class)
+        ->names('admin.categorias')
+        ->middleware('role:Administrador');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reportes
+    |--------------------------------------------------------------------------
+    | Solo Administrador
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/reportes/ventas', [\App\Http\Controllers\Admin\ReporteController::class, 'ventas'])
+        ->middleware('role:Administrador')
+        ->name('admin.reportes.ventas');
+
+    Route::get('/admin/reportes/ventas/exportar', [\App\Http\Controllers\Admin\ReporteController::class, 'exportarVentas'])
+        ->middleware('role:Administrador')
+        ->name('admin.reportes.ventas.exportar');
+
+    Route::get('/admin/reportes/ventas/pdf', [\App\Http\Controllers\Admin\ReporteController::class, 'exportarPdf'])
+        ->middleware('role:Administrador')
+        ->name('admin.reportes.ventas.pdf');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Panel de Supervisión en Tiempo Real (HU-08)
+    |--------------------------------------------------------------------------
+    | Solo Administrador
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/supervision', [\App\Http\Controllers\Admin\ReporteController::class, 'supervision'])
+        ->middleware('role:Administrador')
+        ->name('admin.supervision');
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Gestión de Pedidos
     |--------------------------------------------------------------------------
     */
@@ -386,6 +469,49 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:Administrador,Mesero,Cocinero')
         ->name('admin.pedidos.estado');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Reversión de estados (HU-19)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/admin/pedidos/{pedido}/revertir', [PedidoController::class, 'revertirEstado'])
+        ->middleware('role:Administrador')
+        ->name('admin.pedidos.revertir-estado');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Priorización de pedidos (HU-21)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::patch('/admin/pedidos/{pedido}/prioridad', [PedidoController::class, 'actualizarPrioridad'])
+        ->middleware('role:Administrador,Mesero')
+        ->name('admin.pedidos.actualizar-prioridad');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cancelación de pedidos
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/admin/pedidos/{pedido}/cancelar', [PedidoController::class, 'cancelarPedido'])
+        ->middleware('role:Administrador,Mesero')
+        ->name('admin.pedidos.cancelar');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Agregar item a un pedido
+    |--------------------------------------------------------------------------
+    | Administrador y Mesero
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/admin/pedidos/{pedido}/agregar-item', [PedidoController::class, 'addItem'])
+        ->middleware('role:Administrador,Mesero')
+        ->name('admin.pedidos.addItem');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -430,4 +556,43 @@ Route::middleware('auth')->group(function () {
         ->middleware('role:Administrador,Mesero')
         ->name('admin.pedidos.pago.store');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ver factura del pedido
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/mesero/factura/{pedido}', [PagoController::class, 'factura'])
+        ->middleware('role:Mesero')
+        ->name('mesero.factura');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | División de cuenta (HU-16)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/pedidos/{pedido}/dividir-cuenta', [PagoController::class, 'dividirCuenta'])
+        ->middleware('role:Administrador,Mesero')
+        ->name('admin.pedidos.dividir-cuenta');
+
+    Route::post('/admin/pedidos/{pedido}/procesar-division', [PagoController::class, 'procesarDivision'])
+        ->middleware('role:Administrador,Mesero')
+        ->name('admin.pedidos.procesar-division');
+
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Verificar sesión activa
+|--------------------------------------------------------------------------
+*/
+Route::get('/check-session', function () {
+    if (auth()->check()) {
+        return response()->json(['authenticated' => true], 200);
+    }
+    return response()->json(['authenticated' => false], 401);
 });

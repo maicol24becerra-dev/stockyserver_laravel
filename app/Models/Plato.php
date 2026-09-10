@@ -21,13 +21,28 @@ class Plato extends Model
         'descripcion',
         'disponibilidad',
         'categoria',
+        'id_categoria',
         'imagen',
+        'calorias',
+        'proteinas',
+        'carbohidratos',
+        'grasas',
+        'alergenos',
+        'vegetariano',
+        'vegano',
+        'sin_gluten',
+        'ingredientes_principales',
+        'tiempo_preparacion',
+        'nivel_picante',
     ];
 
     protected function casts(): array
     {
         return [
             'precio' => 'float',
+            'vegetariano' => 'boolean',
+            'vegano' => 'boolean',
+            'sin_gluten' => 'boolean',
         ];
     }
 
@@ -38,5 +53,13 @@ class Plato extends Model
             'id_plato',
             'id_plato'
         );
+    }
+
+    /**
+     * Relación: Un plato pertenece a una categoría
+     */
+    public function categoriaRelacion()
+    {
+        return $this->belongsTo(Categoria::class, 'id_categoria', 'id_categoria');
     }
 }
