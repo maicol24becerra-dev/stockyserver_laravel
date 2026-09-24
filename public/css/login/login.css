@@ -116,7 +116,7 @@ a {
             rgba(3, 15, 7, 0.15) 0%,
             rgba(3, 15, 7, 0.35) 45%,
             rgba(3, 15, 7, 0.92) 100%),
-        url('/elcielo/assets/img/hero-bg.png');
+        url('/images/hero-bg.png');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
