@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuevo Plato — El Cielo</title>
+    <link rel="icon" href="{{ asset('images/logo-circle.png') }}?v={{ time() }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('css/admin-platos.css') }}">
 </head>
 <body>
