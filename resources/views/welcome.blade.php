@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="El Cielo — Plataforma digital del Centro Vacacional y Recreacional.">
-  <title>El Cielo — Sistema de Gestión Integral</title>
+  <title>El Cielo</title>
+  <link rel="icon" href="{{ asset('images/logo-circle.png') }}?v={{ time() }}" type="image/png">
 
   {{-- Fuentes Google: Outfit + Playfair Display --}}
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,8 +21,8 @@
      NAVBAR
 ════════════════════════════════════════════════════════════ --}}
 <nav class="navbar" id="navbar">
-  <a href="{{ url('/') }}" class="nav-brand">
-    <img src="{{ asset('elcielo/assets/img/hero.png') }}?v={{ time() }}" alt="El Cielo">
+  <a href="{{ url('/') }}" class="nav-brand" style="display: flex; align-items: center; gap: 10px;">
+    <img src="{{ asset('images/logo-circle.png') }}?v={{ time() }}" alt="El Cielo Logo" style="height: 38px; width: 38px; object-fit: contain; border-radius: 50%;">
     <span>El Cielo</span>
   </a>
 
@@ -81,13 +82,6 @@
   <div class="hero-overlay"></div>
 
   <div class="hero-content">
-
-    <div class="hero-badge">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/>
-      </svg>
-      <span>SISTEMA DE GESTIÓN INTEGRAL</span>
-    </div>
 
     <h1 class="hero-title">
       Bienvenido a<br>
@@ -266,7 +260,7 @@
 <footer class="footer" id="contacto">
 
   <a href="{{ url('/') }}" class="footer-brand">
-    <img src="{{ asset('elcielo/assets/img/hero.png') }}?v={{ time() }}" alt="El Cielo">
+    <img src="{{ asset('images/hero.png') }}?v={{ time() }}" alt="El Cielo">
     <span>El Cielo</span>
   </a>
 
