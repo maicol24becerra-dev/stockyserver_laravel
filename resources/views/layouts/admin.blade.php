@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Panel de Administrador - El Cielo')</title>
+    <link rel="icon" href="{{ asset('images/logo-circle.png') }}?v={{ time() }}" type="image/png">
     
     <!-- Google Fonts & Chart.js -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +25,7 @@
     <aside class="admin-sidebar">
         <div class="sidebar-brand">
             <div class="logo-circle">
-                <img src="{{ asset('elcielo/assets/img/hero.png') }}?v={{ time() }}" alt="El Cielo Logo">
+                <img src="{{ asset('images/logo-circle.png') }}?v={{ time() }}" alt="El Cielo Logo">
             </div>
             <h2 class="brand-title">El Cielo</h2>
             <p class="brand-subtitle">CENTRO VACACIONAL Y RECREACIONAL</p>
