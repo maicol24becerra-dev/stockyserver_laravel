@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Crea tu cuenta en El Cielo — Centro Vacacional y Recreacional">
     <title>Crear una cuenta — El Cielo</title>
+    <link rel="icon" href="{{ asset('images/logo-circle.png') }}?v={{ time() }}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
@@ -22,9 +23,12 @@
         <div class="auth-panel__content">
 
             <div class="auth-panel__quote">
-                <h2 class="auth-panel__quote-text">
-                    El Cielo
-                </h2>
+                <div class="auth-panel__brand" style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                    <img src="{{ asset('images/logo-circle.png') }}?v={{ time() }}" alt="El Cielo Logo" class="auth-panel__logo" style="width: 60px; height: 60px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+                    <h2 class="auth-panel__quote-text" style="margin-bottom: 0;">
+                        El Cielo
+                    </h2>
+                </div>
                 <p class="auth-panel__quote-sub">
                     Únete a nuestra familia y descubre los sabores más exquisitos.
                 </p>
@@ -41,6 +45,10 @@
 
             {{-- Cabecera --}}
             <div class="auth-card__head">
+                <div class="auth-card__brand" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px;">
+                    <img src="{{ asset('images/logo-circle.png') }}?v={{ time() }}" alt="El Cielo Logo" style="width: 44px; height: 44px; object-fit: contain; border-radius: 50%;">
+                    <span style="font-family: var(--font-display, 'Playfair Display', serif); font-size: 1.5rem; font-weight: 700; color: #1e293b;">El Cielo</span>
+                </div>
                 <p class="auth-card__eyebrow">CENTRO VACACIONAL EL CIELO</p>
                 <h1 class="auth-card__title">Crear una cuenta</h1>
             </div>
