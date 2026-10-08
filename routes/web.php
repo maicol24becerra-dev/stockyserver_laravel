@@ -181,7 +181,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         return view('mesero.dashboard', [
             'pedidos' => $pedidos,
             'clientes' => Cliente::with('usuario')->get(),
-            'platos' => Plato::whereIn('disponibilidad', [1, '1', 'Disponible', 'disponible'])
+            'platos' => Plato::where('disponibilidad', '>', 0)
                 ->orderBy('nombre')
                 ->get(),
         ]);

@@ -67,7 +67,7 @@ class PedidoController extends Controller
     {
         $clientes = Cliente::with('usuario')->get();
 
-        $platos = Plato::where('disponibilidad', 1)
+        $platos = Plato::where('disponibilidad', '>', 0)
             ->orderBy('nombre')
             ->get();
 

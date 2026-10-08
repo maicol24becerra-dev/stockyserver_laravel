@@ -87,22 +87,20 @@ class ClienteController extends Controller
      */
     public function menu(\Illuminate\Http\Request $request): View
     {
-        $query = \App\Models\Plato::with(['categoriaRelacion'])
-            ->where('disponibilidad', 1);
+        $query = \App\Models\Plato::where('disponibilidad', '>', 0);
 
         // Filtro por búsqueda de texto
         if ($request->filled('buscar')) {
             $busqueda = $request->buscar;
             $query->where(function ($q) use ($busqueda) {
                 $q->where('nombre', 'like', "%{$busqueda}%")
-                  ->orWhere('descripcion', 'like', "%{$busqueda}%")
-                  ->orWhere('ingredientes_principales', 'like', "%{$busqueda}%");
+                  ->orWhere('descripcion', 'like', "%{$busqueda}%");
             });
         }
 
         // Filtro por categoría
         if ($request->filled('categoria')) {
-            $query->where('id_categoria', $request->categoria);
+            $query->where('categoria', $request->categoria);
         }
 
         // Filtro por rango de precio
@@ -111,27 +109,6 @@ class ClienteController extends Controller
         }
         if ($request->filled('precio_max')) {
             $query->where('precio', '<=', $request->precio_max);
-        }
-
-        // Filtros dietéticos
-        if ($request->has('vegetariano')) {
-            $query->where('vegetariano', true);
-        }
-        if ($request->has('vegano')) {
-            $query->where('vegano', true);
-        }
-        if ($request->has('sin_gluten')) {
-            $query->where('sin_gluten', true);
-        }
-
-        // Filtro por nivel de picante
-        if ($request->filled('nivel_picante')) {
-            $query->where('nivel_picante', $request->nivel_picante);
-        }
-
-        // Filtro por tiempo de preparación
-        if ($request->filled('tiempo_max')) {
-            $query->where('tiempo_preparacion', '<=', $request->tiempo_max);
         }
 
         // Ordenamiento
@@ -143,28 +120,23 @@ class ClienteController extends Controller
             case 'precio_desc':
                 $query->orderBy('precio', 'desc');
                 break;
-            case 'tiempo':
-                $query->orderBy('tiempo_preparacion', 'asc');
-                break;
-            case 'calorias':
-                $query->orderBy('calorias', 'asc');
-                break;
             default:
                 $query->orderBy('nombre', 'asc');
         }
 
         $platos = $query->paginate(12)->appends($request->query());
 
-        // Obtener categorías para el filtro
-        $categorias = \App\Models\Categoria::where('activo', true)
-            ->withCount('platos')
-            ->having('platos_count', '>', 0)
-            ->orderBy('nombre')
-            ->get();
+        // Obtener categorías únicas desde los platos disponibles
+        $categorias = \App\Models\Plato::where('disponibilidad', '>', 0)
+            ->distinct('categoria')
+            ->pluck('categoria')
+            ->filter()
+            ->sort()
+            ->values();
 
         // Rangos de precio para el filtro
-        $precioMin = \App\Models\Plato::where('disponibilidad', 1)->min('precio');
-        $precioMax = \App\Models\Plato::where('disponibilidad', 1)->max('precio');
+        $precioMin = \App\Models\Plato::where('disponibilidad', '>', 0)->min('precio');
+        $precioMax = \App\Models\Plato::where('disponibilidad', '>', 0)->max('precio');
 
         return view('cliente.menu', compact(
             'platos',

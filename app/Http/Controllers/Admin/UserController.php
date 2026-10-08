@@ -22,7 +22,9 @@ class UserController extends Controller
             ->orderByDesc('id_usuario')
             ->paginate(10);
 
-        return view('admin.usuarios.index', compact('usuarios'));
+        $roles = Role::all();
+
+        return view('admin.usuarios.index', compact('usuarios', 'roles'));
     }
 
 
@@ -199,6 +201,11 @@ class UserController extends Controller
                 'required',
                 'exists:rol,id_rol',
             ],
+
+            'estado' => [
+                'required',
+                'in:activo,inactivo',
+            ],
         ]);
 
 
@@ -243,6 +250,7 @@ class UserController extends Controller
             'correo' => $request->correo,
             'telefono' => $request->telefono,
             'id_rol' => $request->id_rol,
+            'estado' => $request->estado,
         ]);
 
 

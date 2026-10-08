@@ -13,9 +13,6 @@
             <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: var(--admin-text-dark);">Menú</h3>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
-            <button type="button" onclick="openModal('modalPlatilloDia')" class="btn-gold">
-                ★ Platillo del Día
-            </button>
             <button type="button" onclick="openModal('modalAgregarPlato')" class="btn-aplicar">
                 + Agregar Plato
             </button>
@@ -39,7 +36,7 @@
                     <tr>
                         <td>
                             @if($plato->imagen)
-                                <img src="{{ asset('storage/' . $plato->imagen) }}" alt="{{ $plato->nombre }}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover;">
+                                <img src="{{ \Illuminate\Support\Facades\URL::to('/storage/' . $plato->imagen) }}" alt="{{ $plato->nombre }}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover;" onerror="this.parentElement.innerHTML='<div style=\"width: 44px; height: 44px; border-radius: 10px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;\">🍽️</div>'">
                             @else
                                 <div style="width: 44px; height: 44px; border-radius: 10px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">🍽️</div>
                             @endif
@@ -62,9 +59,9 @@
                             @endif
                         </td>
                         <td style="text-align: right;">
-                            <a href="{{ route('admin.platos.edit', $plato) }}" class="btn-link-action" style="color: #d97706;">📝 Editar</a>
+                            <button type="button" onclick="abrirModalEditar({{ $plato->id_plato }}, '{{ addslashes($plato->nombre) }}', {{ $plato->precio }}, {{ $plato->disponibilidad }}, '{{ addslashes($plato->categoria) }}', '{{ addslashes($plato->descripcion) }}')" class="btn-link-action" style="color: #d97706; background: none; border: none; cursor: pointer; font-family: inherit;">📝 Editar</button>
                             <button type="button" onclick="openRecetaModal('{{ $plato->id_plato }}', '{{ addslashes($plato->nombre) }}')" class="btn-link-action" style="color: #0284c7; background: none; border: none; cursor: pointer; font-family: inherit;">📑 Receta</button>
-                            <a href="#" onclick="openModal('modalPlatilloDia')" class="btn-link-action" style="color: #64748b;">🏷️ Oferta</a>
+                        </td>
                         </td>
                     </tr>
                 @empty
@@ -183,76 +180,7 @@
     </div>
 </div>
 
-<!-- MODAL 2: CREAR PLATILLO ESPECIAL DEL DÍA (SCREENSHOT 3) -->
-<div class="modal-overlay" id="modalPlatilloDia">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 class="modal-title" style="color: #d97706;">★ Crear Platillo Especial del Día</h3>
-            <button type="button" class="modal-close-btn" onclick="closeModal('modalPlatilloDia')">✕</button>
-        </div>
-
-        <p class="modal-subtitle">
-            Crea un platillo único que solo estará disponible durante el período que definas. Aparecerá destacado en el panel del cliente.
-        </p>
-
-        <form method="POST" action="{{ route('admin.platos.store') }}" enctype="multipart/form-data">
-            @csrf
-            <div class="filter-group" style="margin-bottom: 16px;">
-                <label class="filter-label">Nombre del platillo especial</label>
-                <input type="text" name="nombre" class="filter-input" placeholder="Ej. Bandeja Paisa Especial" required>
-            </div>
-
-            <div class="form-row-2" style="margin-bottom: 16px;">
-                <div class="filter-group">
-                    <label class="filter-label">Precio normal ($)</label>
-                    <input type="number" step="0.01" min="0" name="precio" class="filter-input" placeholder="Ej. 18.00" required>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Precio en oferta ($) (opcional)</label>
-                    <input type="number" step="0.01" min="0" name="precio_oferta" class="filter-input" placeholder="Ej. 14.00">
-                </div>
-            </div>
-
-            <div class="filter-group" style="margin-bottom: 16px;">
-                <label class="filter-label">Descripción</label>
-                <textarea name="descripcion" class="filter-input" style="height: 70px; resize: vertical;" placeholder="Ingredientes o descripción breve"></textarea>
-            </div>
-
-            <div class="form-row-2" style="margin-bottom: 16px;">
-                <div class="filter-group">
-                    <label class="filter-label">Categoría</label>
-                    <input type="text" name="categoria" class="filter-input" value="Especial">
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Etiqueta de oferta</label>
-                    <input type="text" name="etiqueta_oferta" class="filter-input" value="Platillo del Día">
-                </div>
-            </div>
-
-            <div class="form-row-2" style="margin-bottom: 16px;">
-                <div class="filter-group">
-                    <label class="filter-label">Disponible desde (vacío = ahora)</label>
-                    <input type="datetime-local" name="disponible_desde" class="filter-input">
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Disponible hasta (vacío = sin límite)</label>
-                    <input type="datetime-local" name="disponible_hasta" class="filter-input">
-                </div>
-            </div>
-
-            <div class="filter-group" style="margin-bottom: 24px;">
-                <label class="filter-label">Imagen (opcional)</label>
-                <input type="file" name="imagen_file" class="filter-input" accept="image/*">
-            </div>
-
-            <button type="submit" class="btn-gold" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
-                ★ Crear Platillo Especial
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- MODAL 3: AGREGAR PLATO AL MENÚ (SCREENSHOT 4) -->
+<!-- MODAL 2: AGREGAR PLATO AL MENÚ (SCREENSHOT 3) -->
 <div class="modal-overlay" id="modalAgregarPlato">
     <div class="modal-card">
         <div class="modal-header">
@@ -263,33 +191,90 @@
         <form method="POST" action="{{ route('admin.platos.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="filter-group" style="margin-bottom: 16px;">
-                <label class="filter-label">Nombre del Plato</label>
+                <label class="filter-label">Nombre del Plato *</label>
                 <input type="text" name="nombre" class="filter-input" placeholder="Ej. Hamburguesa Doble" required>
             </div>
 
             <div class="form-row-2" style="margin-bottom: 16px;">
                 <div class="filter-group">
-                    <label class="filter-label">Precio ($)</label>
-                    <input type="number" step="0.01" min="0" name="precio" class="filter-input" placeholder="Ej. 15.50" required>
+                    <label class="filter-label">Precio ($) *</label>
+                    <input type="number" step="0.01" min="0" name="precio" class="filter-input" placeholder="15.50" required>
                 </div>
                 <div class="filter-group">
-                    <label class="filter-label">Categoría</label>
-                    <input type="text" name="categoria" class="filter-input" placeholder="Ej. Platos Fuertes" required>
+                    <label class="filter-label">Disponibilidad *</label>
+                    <input type="number" min="0" name="disponibilidad" class="filter-input" placeholder="10" value="1" required>
                 </div>
             </div>
 
             <div class="filter-group" style="margin-bottom: 16px;">
-                <label class="filter-label">Descripción corta</label>
-                <textarea name="descripcion" class="filter-input" style="height: 70px; resize: vertical;" placeholder="Ingredientes o descripción breve"></textarea>
+                <label class="filter-label">Categoría</label>
+                <input type="text" name="categoria" class="filter-input" placeholder="Ej. Platos Fuertes">
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 16px;">
+                <label class="filter-label">Descripción</label>
+                <textarea name="descripcion" class="filter-input" style="height: 60px; resize: vertical;" placeholder="Ingredientes o descripción breve"></textarea>
             </div>
 
             <div class="filter-group" style="margin-bottom: 24px;">
-                <label class="filter-label">Imagen del Plato</label>
-                <input type="file" name="imagen_file" class="filter-input" accept="image/*">
+                <label class="filter-label">Imagen</label>
+                <input type="file" name="imagen" class="filter-input" accept="image/*">
+                <small style="color: #666; display: block; margin-top: 8px;">JPG, PNG o GIF (máx 2MB)</small>
             </div>
 
             <button type="submit" class="btn-aplicar" style="width: 100%; justify-content: center; padding: 12px; font-size: 1rem;">
-                Guardar Plato
+                ✓ Guardar Plato
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL 3: EDITAR PLATO -->
+<div class="modal-overlay" id="modalEditarPlato">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Editar Plato</h3>
+            <button type="button" class="modal-close-btn" onclick="closeModal('modalEditarPlato')">✕</button>
+        </div>
+
+        <form method="POST" id="formEditarPlato" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Nombre *</label>
+                <input type="text" id="editNombre" name="nombre" class="filter-input" required>
+            </div>
+
+            <div class="form-row-2" style="margin-bottom: 12px;">
+                <div class="filter-group">
+                    <label class="filter-label">Precio ($) *</label>
+                    <input type="number" step="0.01" min="0" id="editPrecio" name="precio" class="filter-input" required>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Disponibilidad *</label>
+                    <input type="number" min="0" id="editDisponibilidad" name="disponibilidad" class="filter-input" required>
+                </div>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Categoría</label>
+                <input type="text" id="editCategoria" name="categoria" class="filter-input">
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Descripción</label>
+                <textarea id="editDescripcion" name="descripcion" class="filter-input" style="height: 50px; resize: vertical;"></textarea>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 18px;">
+                <label class="filter-label">Imagen</label>
+                <input type="file" id="editImagen" name="imagen" class="filter-input" accept="image/*">
+                <small style="color: #666; display: block; margin-top: 6px;">JPG, PNG o GIF (máx 2MB)</small>
+            </div>
+
+            <button type="submit" class="btn-aplicar" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.95rem;">
+                ✓ Actualizar
             </button>
         </form>
     </div>
@@ -345,6 +330,22 @@
         if (modal) {
             modal.classList.remove('show');
         }
+    }
+
+    function abrirModalEditar(id, nombre, precio, disponibilidad, categoria, descripcion) {
+        // Llenar los datos en el formulario
+        document.getElementById('editNombre').value = nombre;
+        document.getElementById('editPrecio').value = precio;
+        document.getElementById('editDisponibilidad').value = disponibilidad;
+        document.getElementById('editCategoria').value = categoria || '';
+        document.getElementById('editDescripcion').value = descripcion || '';
+        
+        // Configurar la acción del formulario para actualizar (ruta PUT)
+        const form = document.getElementById('formEditarPlato');
+        form.action = '/admin/platos/' + id;
+        
+        // Abrir el modal
+        openModal('modalEditarPlato');
     }
 
     function openRecetaModal(idPlato, nombrePlato) {

@@ -45,8 +45,8 @@
                                 @endif
                             </td>
                             <td style="text-align: right;">
-                                <a href="{{ route('admin.usuarios.show', $usuario) }}" style="color: #0d9488; font-weight: 700; text-decoration: none; margin-right: 10px;">Ver</a>
-                                <a href="{{ route('admin.usuarios.edit', $usuario) }}" style="color: #2563eb; font-weight: 700; text-decoration: none; margin-right: 10px;">Editar</a>
+                                <button type="button" onclick="abrirModalVerUsuario({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', '{{ addslashes($usuario->correo) }}', '{{ addslashes($usuario->telefono) }}', '{{ addslashes($usuario->role->nombre ?? '') }}', '{{ addslashes($usuario->estado) }}')" style="background: none; border: none; color: #0d9488; font-weight: 700; cursor: pointer; font-family: inherit; margin-right: 10px; text-decoration: none;">Ver</button>
+                                <button type="button" onclick="abrirModalEditarUsuario({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', '{{ addslashes($usuario->correo) }}', '{{ addslashes($usuario->telefono) }}', '{{ $usuario->id_rol }}', '{{ addslashes($usuario->estado) }}')" style="background: none; border: none; color: #2563eb; font-weight: 700; cursor: pointer; font-family: inherit; margin-right: 10px; text-decoration: none;">Editar</button>
                                 @if (auth()->id() !== $usuario->id_usuario)
                                     <form action="{{ route('admin.usuarios.destroy', $usuario) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
                                         @csrf
@@ -69,4 +69,150 @@
     @endif
 </div>
 
+<!-- MODAL: VER USUARIO -->
+<div class="modal-overlay" id="modalVerUsuario">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Detalles del Usuario</h3>
+            <button type="button" class="modal-close-btn" onclick="closeModal('modalVerUsuario')">✕</button>
+        </div>
+
+        <div style="padding: 16px;">
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Nombre</label>
+                <p style="margin: 0; color: #1f2937; font-weight: 500;" id="verNombreUsuario">-</p>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Correo</label>
+                <p style="margin: 0; color: #1f2937; font-weight: 500;" id="verCorreoUsuario">-</p>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Teléfono</label>
+                <p style="margin: 0; color: #1f2937; font-weight: 500;" id="verTelefonoUsuario">-</p>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Rol</label>
+                <p style="margin: 0; color: #1f2937; font-weight: 500;" id="verRolUsuario">-</p>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 18px;">
+                <label class="filter-label">Estado</label>
+                <p style="margin: 0; color: #1f2937; font-weight: 500;" id="verEstadoUsuario">-</p>
+            </div>
+
+            <button type="button" class="btn-aplicar" onclick="closeModal('modalVerUsuario')" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.95rem;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: EDITAR USUARIO -->
+<div class="modal-overlay" id="modalEditarUsuario">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Editar Usuario</h3>
+            <button type="button" class="modal-close-btn" onclick="closeModal('modalEditarUsuario')">✕</button>
+        </div>
+
+        <form method="POST" id="formEditarUsuario">
+            @csrf
+            @method('PUT')
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Nombre *</label>
+                <input type="text" id="editNombreUsuario" name="nombre" class="filter-input" required>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Correo *</label>
+                <input type="email" id="editCorreoUsuario" name="correo" class="filter-input" required>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Teléfono</label>
+                <input type="text" id="editTelefonoUsuario" name="telefono" class="filter-input">
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 12px;">
+                <label class="filter-label">Rol *</label>
+                <select id="editRolUsuario" name="id_rol" class="filter-select" required>
+                    <option value="">Seleccionar rol...</option>
+                    @foreach($roles ?? [] as $rol)
+                        <option value="{{ $rol->id_rol }}">{{ $rol->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="filter-group" style="margin-bottom: 18px;">
+                <label class="filter-label">Estado *</label>
+                <select id="editEstadoUsuario" name="estado" class="filter-select" required>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-aplicar" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.95rem;">
+                ✓ Actualizar
+            </button>
+        </form>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.add('show');
+        }
+    }
+
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    function abrirModalVerUsuario(id, nombre, correo, telefono, rol, estado) {
+        // Llenar los datos en el modal
+        document.getElementById('verNombreUsuario').innerText = nombre || '-';
+        document.getElementById('verCorreoUsuario').innerText = correo || '-';
+        document.getElementById('verTelefonoUsuario').innerText = telefono || '-';
+        document.getElementById('verRolUsuario').innerText = rol || '-';
+        document.getElementById('verEstadoUsuario').innerText = estado ? (estado.charAt(0).toUpperCase() + estado.slice(1)) : '-';
+        
+        // Abrir el modal
+        openModal('modalVerUsuario');
+    }
+
+    function abrirModalEditarUsuario(id, nombre, correo, telefono, idRol, estado) {
+        // Llenar los datos en el formulario
+        document.getElementById('editNombreUsuario').value = nombre;
+        document.getElementById('editCorreoUsuario').value = correo;
+        document.getElementById('editTelefonoUsuario').value = telefono || '';
+        document.getElementById('editRolUsuario').value = idRol || '';
+        document.getElementById('editEstadoUsuario').value = estado.toLowerCase() || 'activo';
+        
+        // Configurar la acción del formulario para actualizar (ruta PUT)
+        const form = document.getElementById('formEditarUsuario');
+        form.action = '/admin/usuarios/' + id;
+        
+        // Abrir el modal
+        openModal('modalEditarUsuario');
+    }
+
+    // Close on overlay click
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('show');
+        }
+    });
+</script>
+@endpush

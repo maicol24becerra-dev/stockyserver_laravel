@@ -112,7 +112,7 @@
                 <div class="menu-cards-grid">
                     @foreach($platos as $plato)
                         @php
-                            $categoriaNombre = strtolower(trim($plato->categoriaRelacion?->nombre ?? $plato->categoria ?? 'carnes'));
+                            $categoriaNombre = strtolower(trim($plato->categoria ?? 'carnes'));
                         @endphp
                         <div class="menu-dish-card">
                             <div class="dish-image-wrapper">
